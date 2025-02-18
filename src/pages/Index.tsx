@@ -102,7 +102,7 @@ const Index = () => {
                 >
                   Upload New Image
                 </Button>
-                <Button onClick={handleDownload}>Download Pixel Art</Button>
+                <Button onClick={handleDownload} className="gradient-button">Download Pixel Art</Button>
               </div>
             </div>
           </div>
