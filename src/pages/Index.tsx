@@ -9,6 +9,7 @@ import { PixelatedImage } from "@/components/PixelatedImage";
 const Index = () => {
   const [image, setImage] = useState<string | null>(null);
   const [pixelSize, setPixelSize] = useState([8]);
+  const [useSameResolution, setUseSameResolution] = useState(false);
   const pixelatedRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -55,7 +56,7 @@ const Index = () => {
         ) : (
           <div className="space-y-6">
             <div ref={pixelatedRef} className="relative aspect-square w-full max-w-2xl mx-auto rounded-lg overflow-hidden">
-              <PixelatedImage src={image} pixelSize={pixelSize[0]} />
+              <PixelatedImage src={image} pixelSize={pixelSize[0]} useSameResolution={useSameResolution} />
             </div>
             
             <div className="space-y-4">
@@ -70,7 +71,17 @@ const Index = () => {
                   className="w-full"
                 />
               </div>
-              
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="resolutionCheckbox"
+                  checked={useSameResolution}
+                  onChange={(e) => setUseSameResolution(e.target.checked)}
+                />
+                <label htmlFor="resolutionCheckbox" className="text-sm text-gray-600">
+                  Use same resolution as source image
+                </label>
+              </div>
               <div className="flex gap-4 justify-center">
                 <input
                   type="file"

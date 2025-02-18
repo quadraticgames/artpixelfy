@@ -1,69 +1,22 @@
-# Welcome to your Lovable project
+# ArtPixelfy
 
-## Project info
+ArtPixelfy is a web application that allows users to upload images and convert them into pixel art. It features an intuitive drag-and-drop interface, adjustable pixel size, and the ability to download the pixelated image.
 
-**URL**: https://lovable.dev/projects/398cfabb-0236-4825-9743-9dcede3bd987
+## Features
 
-## How can I edit this code?
+- Upload images via drag-and-drop or file browser
+- Convert images to pixel art with adjustable pixel size
+- Control output resolution with option to maintain original image resolution
+- Download pixelated images
+- Responsive design for various screen sizes
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- React with TypeScript
+- Vite for development and build
+- Radix UI components
+- HTML-to-image conversion
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/398cfabb-0236-4825-9743-9dcede3bd987) and start prompting.
+## Live Demo
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with .
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/398cfabb-0236-4825-9743-9dcede3bd987) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+Check out the live demo at [ArtPixelfy on Netlify](https://artpixelfy.netlify.app).
