@@ -37,15 +37,15 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen p-8 font-pixel"
+    <div className="min-h-screen p-7 font-pixel"
       style={{
         background: "linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)",
         backgroundSize: "400% 400%",
         animation: "gradient 15s ease infinite"
       }}
     >
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="text-center space-y-2">
+      <div className="max-w-4xl mx-auto space-y-7">
+        <div className="text-center space-y-1.5">
           <h1 className="text-4xl font-medium tracking-tight text-white">Create Pixel Art</h1>
           <p className="text-white">Upload an image and convert it into beautiful pixel art</p>
         </div>
@@ -53,13 +53,13 @@ const Index = () => {
         {!image ? (
           <ImageUploader onUpload={handleImageUpload} />
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-5">
             <div ref={pixelatedRef} className="relative aspect-square w-full max-w-xl mx-auto rounded-lg overflow-hidden">
               <PixelatedImage src={image} pixelSize={pixelSize[0]} useSameResolution={useSameResolution} />
             </div>
             
-            <div className="space-y-4">
-              <div className="space-y-2">
+            <div className="space-y-3">
+              <div className="space-y-1.5">
                 <label className="text-sm text-white">Pixel Size</label>
                 <Slider
                   value={pixelSize}
@@ -70,7 +70,7 @@ const Index = () => {
                   className="w-full"
                 />
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1.5">
                 <input
                   type="checkbox"
                   id="resolutionCheckbox"
@@ -81,7 +81,7 @@ const Index = () => {
                   Use same resolution as source image
                 </label>
               </div>
-              <div className="flex gap-4 justify-center">
+              <div className="flex gap-3 justify-center">
                 <input
                   type="file"
                   ref={fileInputRef}
