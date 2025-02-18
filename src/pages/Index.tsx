@@ -47,7 +47,7 @@ const Index = () => {
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-medium tracking-tight text-white">Create Pixel Art</h1>
-          <p className="text-white/80">Upload an image and convert it into beautiful pixel art</p>
+          <p className="text-white">Upload an image and convert it into beautiful pixel art</p>
         </div>
 
         {!image ? (
@@ -60,7 +60,7 @@ const Index = () => {
             
             <div className="space-y-4">
               <div className="space-y-2">
-                <label className="text-sm text-gray-600">Pixel Size</label>
+                <label className="text-sm text-white">Pixel Size</label>
                 <Slider
                   value={pixelSize}
                   onValueChange={setPixelSize}
@@ -77,7 +77,7 @@ const Index = () => {
                   checked={useSameResolution}
                   onChange={(e) => setUseSameResolution(e.target.checked)}
                 />
-                <label htmlFor="resolutionCheckbox" className="text-sm text-gray-600">
+                <label htmlFor="resolutionCheckbox" className="text-sm text-white">
                   Use same resolution as source image
                 </label>
               </div>
