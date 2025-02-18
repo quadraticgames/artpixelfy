@@ -99,7 +99,7 @@ const Index = () => {
                   }}
                 />
                 <Button
-                  variant="outline"
+                  variant="purple"
                   onClick={() => {
                     fileInputRef.current?.click();
                   }}
