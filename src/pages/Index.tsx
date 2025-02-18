@@ -37,7 +37,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 p-8">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 p-8 font-pixel">
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center space-y-2">
           <span className="px-3 py-1 text-sm bg-gray-100 rounded-full">Transform</span>
