@@ -1,4 +1,3 @@
-
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -6,12 +5,12 @@ import { toast } from "sonner";
 import * as htmlToImage from "html-to-image";
 import { ImageUploader } from "@/components/ImageUploader";
 import { PixelatedImage } from "@/components/PixelatedImage";
-import { Card } from "@/components/ui/card";
 
 const Index = () => {
   const [image, setImage] = useState<string | null>(null);
   const [pixelSize, setPixelSize] = useState([8]);
   const pixelatedRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (file: File) => {
     const reader = new FileReader();
@@ -51,44 +50,53 @@ const Index = () => {
           <p className="text-white/80">Upload an image and convert it into beautiful pixel art</p>
         </div>
 
-        <Card className="p-8 bg-white/50 backdrop-blur-sm border border-gray-100">
-          {!image ? (
-            <ImageUploader onUpload={handleImageUpload} />
-          ) : (
-            <div className="space-y-6">
-              <div ref={pixelatedRef} className="relative aspect-square w-full max-w-2xl mx-auto rounded-lg overflow-hidden">
-                <PixelatedImage src={image} pixelSize={pixelSize[0]} />
+        {!image ? (
+          <ImageUploader onUpload={handleImageUpload} />
+        ) : (
+          <div className="space-y-6">
+            <div ref={pixelatedRef} className="relative aspect-square w-full max-w-2xl mx-auto rounded-lg overflow-hidden">
+              <PixelatedImage src={image} pixelSize={pixelSize[0]} />
+            </div>
+            
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm text-gray-600">Pixel Size</label>
+                <Slider
+                  value={pixelSize}
+                  onValueChange={setPixelSize}
+                  min={4}
+                  max={32}
+                  step={1}
+                  className="w-full"
+                />
               </div>
               
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label className="text-sm text-gray-600">Pixel Size</label>
-                  <Slider
-                    value={pixelSize}
-                    onValueChange={setPixelSize}
-                    min={4}
-                    max={32}
-                    step={1}
-                    className="w-full"
-                  />
-                </div>
-                
-                <div className="flex gap-4 justify-center">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setImage(null);
-                      setPixelSize([8]);
-                    }}
-                  >
-                    Upload New Image
-                  </Button>
-                  <Button onClick={handleDownload}>Download Pixel Art</Button>
-                </div>
+              <div className="flex gap-4 justify-center">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  className="hidden"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      handleImageUpload(file);
+                    }
+                  }}
+                />
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    fileInputRef.current?.click();
+                  }}
+                >
+                  Upload New Image
+                </Button>
+                <Button onClick={handleDownload}>Download Pixel Art</Button>
               </div>
             </div>
-          )}
-        </Card>
+          </div>
+        )}
       </div>
     </div>
   );
