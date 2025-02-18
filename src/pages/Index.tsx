@@ -46,7 +46,11 @@ const Index = () => {
     >
       <div className="max-w-4xl mx-auto space-y-7">
         <div className="text-center space-y-1.5">
-          <h1 className="text-4xl font-medium tracking-tight text-white">Create Pixel Art</h1>
+          <h1 className="text-4xl font-medium tracking-tight text-white">
+            <a href="/" className="hover:opacity-80 transition-opacity cursor-pointer">
+              Create Pixel Art
+            </a>
+          </h1>
           <p className="text-white">Upload an image and convert it into beautiful pixel art</p>
         </div>
 
