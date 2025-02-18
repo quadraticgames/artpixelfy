@@ -40,7 +40,7 @@ export const ImageUploader = ({ onUpload }: ImageUploaderProps) => {
     <div
       {...getRootProps()}
       className={cn(
-        "relative aspect-square w-full max-w-2xl mx-auto rounded-lg border-2 border-dashed transition-all duration-200 ease-in-out",
+        "relative aspect-square w-full max-w-2xl mx-auto rounded-lg border-2 border-dashed transition-all duration-200 ease-in-out cursor-pointer",
         "hover:bg-gray-50 hover:border-gray-300",
         isDragging ? "border-gray-400 bg-gray-50" : "border-gray-200",
       )}
