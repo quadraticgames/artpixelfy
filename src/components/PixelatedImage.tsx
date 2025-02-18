@@ -1,72 +1,133 @@
 import { useEffect, useRef } from "react";
+import { CLASSIC_PALETTES } from "@/lib/palettes";
 
 interface PixelatedImageProps {
   src: string;
   pixelSize: number;
-  useSameResolution: boolean;
+  useSameResolution?: boolean;
+  paletteId?: string;
 }
 
-export const PixelatedImage = ({ src, pixelSize, useSameResolution }: PixelatedImageProps) => {
+export function PixelatedImage({
+  src,
+  pixelSize,
+  useSameResolution = false,
+  paletteId = 'original'
+}: PixelatedImageProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     const img = new Image();
+    img.crossOrigin = "anonymous";
     img.src = src;
     img.onload = () => {
-      // Use original image dimensions
-      canvas.width = img.width;
-      canvas.height = img.height;
+      // Calculate dimensions
+      const aspectRatio = img.width / img.height;
+      const targetWidth = useSameResolution ? img.width : 512;
+      const targetHeight = useSameResolution ? img.height : Math.round(512 / aspectRatio);
+      
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
 
-      // Calculate target dimensions based on useSameResolution
-      let targetWidth = img.width;
-      let targetHeight = img.height;
-      if (!useSameResolution) {
-        // Scale down the image while maintaining aspect ratio
-        const scale = Math.min(800 / img.width, 800 / img.height);
-        targetWidth = Math.floor(img.width * scale);
-        targetHeight = Math.floor(img.height * scale);
-        
-        // Update canvas size
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-      }
-
-      // Draw original image at target size
+      // Draw original image
+      ctx.imageSmoothingEnabled = false;
       ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
 
       // Get image data
       const imageData = ctx.getImageData(0, 0, targetWidth, targetHeight);
       const data = imageData.data;
 
+      // If using a palette other than original, quantize colors
+      const palette = CLASSIC_PALETTES.find(p => p.id === paletteId);
+      if (palette && palette.id !== 'original') {
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          
+          // Find the closest color in the palette
+          const closestColor = findClosestColor([r, g, b], palette.colors);
+          const [cr, cg, cb] = hexToRgb(closestColor);
+          
+          data[i] = cr;
+          data[i + 1] = cg;
+          data[i + 2] = cb;
+        }
+      }
+
       // Clear canvas
       ctx.clearRect(0, 0, targetWidth, targetHeight);
 
-      // Draw pixelated version
-      for (let y = 0; y < targetHeight; y += pixelSize) {
-        for (let x = 0; x < targetWidth; x += pixelSize) {
-          // Get the color of the first pixel in the block
-          const red = data[((y * targetWidth + x) * 4)];
-          const green = data[((y * targetWidth + x) * 4) + 1];
-          const blue = data[((y * targetWidth + x) * 4) + 2];
-          const alpha = data[((y * targetWidth + x) * 4) + 3];
-
-          ctx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha / 255})`;
-          ctx.fillRect(x, y, pixelSize, pixelSize);
+      // Create pixelated effect
+      const pixelWidth = Math.max(1, Math.floor(targetWidth / pixelSize));
+      const pixelHeight = Math.max(1, Math.floor(targetHeight / pixelSize));
+      
+      for (let y = 0; y < pixelHeight; y++) {
+        for (let x = 0; x < pixelWidth; x++) {
+          const sourceX = Math.floor(x * (targetWidth / pixelWidth));
+          const sourceY = Math.floor(y * (targetHeight / pixelHeight));
+          const sourceIndex = (sourceY * targetWidth + sourceX) * 4;
+          
+          const r = data[sourceIndex];
+          const g = data[sourceIndex + 1];
+          const b = data[sourceIndex + 2];
+          const a = data[sourceIndex + 3];
+          
+          ctx.fillStyle = `rgba(${r},${g},${b},${a / 255})`;
+          ctx.fillRect(
+            x * (targetWidth / pixelWidth),
+            y * (targetHeight / pixelHeight),
+            targetWidth / pixelWidth,
+            targetHeight / pixelHeight
+          );
         }
       }
     };
-  }, [src, pixelSize, useSameResolution]);
+  }, [src, pixelSize, useSameResolution, paletteId]);
 
   return (
     <canvas
       ref={canvasRef}
-      className="w-full h-full object-contain transition-all duration-300 ease-in-out"
+      className="w-full h-full"
     />
   );
-};
+}
+
+// Helper function to convert hex to RGB
+function hexToRgb(hex: string): [number, number, number] {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!result) return [0, 0, 0];
+  return [
+    parseInt(result[1], 16),
+    parseInt(result[2], 16),
+    parseInt(result[3], 16)
+  ];
+}
+
+// Helper function to find the closest color in a palette
+function findClosestColor(rgb: [number, number, number], paletteColors: string[]): string {
+  let minDistance = Infinity;
+  let closestColor = paletteColors[0];
+
+  for (const color of paletteColors) {
+    const targetRgb = hexToRgb(color);
+    const distance = Math.sqrt(
+      Math.pow(rgb[0] - targetRgb[0], 2) +
+      Math.pow(rgb[1] - targetRgb[1], 2) +
+      Math.pow(rgb[2] - targetRgb[2], 2)
+    );
+
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestColor = color;
+    }
+  }
+
+  return closestColor;
+}
