@@ -37,12 +37,18 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 p-8 font-pixel">
+    <div className="min-h-screen p-8 font-pixel"
+      style={{
+        background: "linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)",
+        backgroundSize: "400% 400%",
+        animation: "gradient 15s ease infinite"
+      }}
+    >
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center space-y-2">
-          <span className="px-3 py-1 text-sm bg-gray-100 rounded-full">Transform</span>
-          <h1 className="text-4xl font-medium tracking-tight">Create Pixel Art</h1>
-          <p className="text-gray-500">Upload an image and convert it into beautiful pixel art</p>
+          <span className="px-3 py-1 text-sm bg-white/90 rounded-full">Transform</span>
+          <h1 className="text-4xl font-medium tracking-tight text-white">Create Pixel Art</h1>
+          <p className="text-white/80">Upload an image and convert it into beautiful pixel art</p>
         </div>
 
         <Card className="p-8 bg-white/50 backdrop-blur-sm border border-gray-100">
