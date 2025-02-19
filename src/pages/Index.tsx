@@ -99,13 +99,16 @@ const Index = () => {
                   />
                   <Button
                     variant="purple"
-                    onClick={() => {
-                      fileInputRef.current?.click();
-                    }}
+                    onClick={() => fileInputRef.current?.click()}
                   >
                     Upload New Image
                   </Button>
-                  <Button onClick={handleDownload} className="gradient-button">Download Pixel Art</Button>
+                  <Button
+                    variant="purple"
+                    onClick={handleDownload}
+                  >
+                    Download
+                  </Button>
                 </div>
               </div>
             </div>
