@@ -27,21 +27,30 @@ export const CLASSIC_PALETTES: Palette[] = [
       '#7C7C7C', '#0000FC', '#0000BC', '#4428BC',
       '#940084', '#A80020', '#A81000', '#881400',
       '#503000', '#007800', '#006800', '#005800',
-      '#004058', '#000000', '#000000', '#000000',
-      '#BCBCBC', '#0078F8', '#0058F8', '#6844FC',
-      '#D800CC', '#E40058', '#F83800', '#E45C10',
-      '#AC7C00', '#00B800', '#00A800', '#00A844',
-      '#008888', '#000000', '#000000', '#000000',
+      '#004058', '#000000', '#BCBCBC', '#0078F8',
+      '#0058F8', '#6844FC', '#D800CC', '#E40058',
+      '#F83800', '#E45C10', '#AC7C00', '#00B800',
+      '#00A800', '#00A844', '#008888', '#000000',
       '#F8F8F8', '#3CBCFC', '#6888FC', '#9878F8',
       '#F878F8', '#F85898', '#F87858', '#FCA044',
       '#F8B800', '#B8F818', '#58D854', '#58F898',
-      '#00E8D8', '#787878', '#000000', '#000000',
-      '#FCFCFC', '#A4E4FC', '#B8B8F8', '#D8B8F8',
-      '#F8B8F8', '#F8A4C0', '#F0D0B0', '#FCE0A8',
-      '#F8D878', '#D8F878', '#B8F8B8', '#B8F8D8',
-      '#00FCFC', '#F8D8F8', '#000000', '#000000'
+      '#00E8D8', '#787878', '#FCFCFC', '#A4E4FC',
+      '#B8B8F8', '#D8B8F8', '#F8B8F8', '#F8A4C0',
+      '#F0D0B0', '#FCE0A8', '#F8D878', '#D8F878',
+      '#B8F8B8', '#B8F8D8', '#00FCFC', '#F8D8F8'
     ],
-    description: 'Official Nintendo Entertainment System color palette'
+    description: 'Nintendo Entertainment System\'s optimized color palette'
+  },
+  {
+    id: 'intellivision',
+    name: 'Intellivision',
+    colors: [
+      '#000000', '#002DFF', '#FF3E00', '#FF1F6F',
+      '#00FF00', '#FFE700', '#0026FF', '#B200FF',
+      '#FF8B00', '#00FFA4', '#FFFA00', '#00FF8A',
+      '#FF0000', '#00FFFF', '#808080', '#FFFFFF'
+    ],
+    description: 'Mattel Intellivision\'s 16-color palette'
   },
   {
     id: 'cga',
