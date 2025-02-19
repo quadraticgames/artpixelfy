@@ -65,13 +65,18 @@ export function PixelatedImage({
       ctx.clearRect(0, 0, targetWidth, targetHeight);
 
       // Create pixelated effect
-      const pixelWidth = Math.max(1, Math.floor(targetWidth / pixelSize));
-      const pixelHeight = Math.max(1, Math.floor(targetHeight / pixelSize));
+      const pixelWidth = Math.floor(targetWidth / pixelSize);
+      const pixelHeight = Math.floor(targetHeight / pixelSize);
+      
+      // Calculate actual pixel size to ensure uniform squares
+      const actualPixelWidth = targetWidth / pixelWidth;
+      const actualPixelHeight = targetHeight / pixelHeight;
       
       for (let y = 0; y < pixelHeight; y++) {
         for (let x = 0; x < pixelWidth; x++) {
-          const sourceX = Math.floor(x * (targetWidth / pixelWidth));
-          const sourceY = Math.floor(y * (targetHeight / pixelHeight));
+          // Sample from the center of each pixel
+          const sourceX = Math.floor((x + 0.5) * actualPixelWidth);
+          const sourceY = Math.floor((y + 0.5) * actualPixelHeight);
           const sourceIndex = (sourceY * targetWidth + sourceX) * 4;
           
           const r = data[sourceIndex];
@@ -81,10 +86,10 @@ export function PixelatedImage({
           
           ctx.fillStyle = `rgba(${r},${g},${b},${a / 255})`;
           ctx.fillRect(
-            x * (targetWidth / pixelWidth),
-            y * (targetHeight / pixelHeight),
-            targetWidth / pixelWidth,
-            targetHeight / pixelHeight
+            x * actualPixelWidth,
+            y * actualPixelHeight,
+            actualPixelWidth,
+            actualPixelHeight
           );
         }
       }
