@@ -39,7 +39,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen p-7 font-pixel"
+    <div className="min-h-screen p-7 font-pixel relative"
       style={{
         background: "linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)",
         backgroundSize: "400% 400%",
@@ -122,6 +122,9 @@ const Index = () => {
             </div>
           </div>
         )}
+      </div>
+      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2">
+        <p className="text-white text-sm opacity-50">Version 1.01</p>
       </div>
     </div>
   );
