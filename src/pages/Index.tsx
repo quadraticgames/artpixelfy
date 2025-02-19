@@ -99,12 +99,14 @@ const Index = () => {
                   />
                   <Button
                     variant="purple"
+                    className="w-36"
                     onClick={() => fileInputRef.current?.click()}
                   >
                     Upload New Image
                   </Button>
                   <Button
                     variant="purple"
+                    className="w-36"
                     onClick={handleDownload}
                   >
                     Download
@@ -116,7 +118,7 @@ const Index = () => {
         </div>
         <div className="text-center mt-4">
           <div className="flex flex-col items-center space-y-2">
-            <p className="text-white text-sm opacity-50">Version 1.2</p>
+            <p className="text-white text-sm opacity-50">Version 1.01</p>
             <a href="https://quadraticgames.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
               <img src="/images/quadratic-logo.png" alt="Quadratic Games Logo" className="h-8" />
             </a>
