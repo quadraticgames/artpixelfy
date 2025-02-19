@@ -189,21 +189,20 @@ export function PixelatedImage({
   }, [src, debouncedPixelSize, paletteId, paletteRgb, onCanvasRender]);
 
   return (
-    <>
-      {isProcessing && <LoadingSpinner />}
-      <div style={{ width: '100%', paddingBottom: `${aspectRatio}%`, position: 'relative' }}>
-        <canvas
-          ref={canvasRef}
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            imageRendering: 'pixelated'
-          }}
-        />
-      </div>
-    </>
+    <div className="relative h-[300px] flex items-center justify-center">
+      {isProcessing && (
+        <div className="absolute inset-0 flex items-center justify-center bg-white/50">
+          <LoadingSpinner />
+        </div>
+      )}
+      <canvas
+        ref={canvasRef}
+        style={{
+          maxWidth: '100%',
+          maxHeight: '100%',
+          objectFit: 'contain'
+        }}
+      />
+    </div>
   );
 }
