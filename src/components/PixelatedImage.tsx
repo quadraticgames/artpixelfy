@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { CLASSIC_PALETTES } from "@/lib/palettes";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 interface PixelatedImageProps {
   src: string;
@@ -71,6 +72,7 @@ export function PixelatedImage({
 }: PixelatedImageProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [aspectRatio, setAspectRatio] = useState(1);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Clear cache when component unmounts or when palette changes
   useEffect(() => {
@@ -85,6 +87,8 @@ export function PixelatedImage({
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    setIsProcessing(true);
 
     const img = new Image();
     img.crossOrigin = "anonymous";
@@ -131,52 +135,26 @@ export function PixelatedImage({
         onCanvasRender(canvas);
       }
 
-      // Create pixelated effect
-      const tempCanvas = document.createElement('canvas');
-      const tempCtx = tempCanvas.getContext('2d');
-      if (!tempCtx) return;
-      
-      tempCanvas.width = targetWidth;
-      tempCanvas.height = targetHeight;
-      tempCtx.drawImage(canvas, 0, 0);
-      
-      ctx.clearRect(0, 0, targetWidth, targetHeight);
-      
-      const numPixelsX = Math.floor(targetWidth / pixelSize);
-      const numPixelsY = Math.floor(targetHeight / pixelSize);
-      
-      for (let y = 0; y < numPixelsY; y++) {
-        for (let x = 0; x < numPixelsX; x++) {
-          const sourceX = x * pixelSize;
-          const sourceY = y * pixelSize;
-          
-          const pixelData = tempCtx.getImageData(sourceX, sourceY, 1, 1).data;
-          
-          ctx.fillStyle = `rgba(${pixelData[0]},${pixelData[1]},${pixelData[2]},${pixelData[3] / 255})`;
-          ctx.fillRect(
-            x * pixelSize,
-            y * pixelSize,
-            pixelSize,
-            pixelSize
-          );
-        }
-      }
+      setIsProcessing(false);
     };
   }, [src, pixelSize, paletteId, onCanvasRender]);
 
   return (
-    <div style={{ width: '100%', paddingBottom: `${aspectRatio}%`, position: 'relative' }}>
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          imageRendering: 'pixelated'
-        }}
-      />
-    </div>
+    <>
+      {isProcessing && <LoadingSpinner />}
+      <div style={{ width: '100%', paddingBottom: `${aspectRatio}%`, position: 'relative' }}>
+        <canvas
+          ref={canvasRef}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            imageRendering: 'pixelated'
+          }}
+        />
+      </div>
+    </>
   );
 }
