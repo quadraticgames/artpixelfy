@@ -4,7 +4,6 @@ import { CLASSIC_PALETTES } from "@/lib/palettes";
 interface PixelatedImageProps {
   src: string;
   pixelSize: number;
-  useSameResolution?: boolean;
   paletteId?: string;
 }
 
@@ -66,7 +65,6 @@ function findClosestColor(rgb: [number, number, number], paletteColors: string[]
 export function PixelatedImage({
   src,
   pixelSize,
-  useSameResolution = false,
   paletteId = 'original'
 }: PixelatedImageProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -89,89 +87,69 @@ export function PixelatedImage({
     img.crossOrigin = "anonymous";
     img.src = src;
     img.onload = () => {
-      // Calculate dimensions to maintain aspect ratio
-      const aspectRatio = img.width / img.height;
-      const baseSize = 512; // Base size for scaling
-      let targetWidth, targetHeight;
+      // Use original image dimensions
+      const targetWidth = img.width;
+      const targetHeight = img.height;
       
-      if (useSameResolution) {
-        targetWidth = img.width;
-        targetHeight = img.height;
-      } else {
-        if (aspectRatio >= 1) {
-          targetWidth = baseSize;
-          targetHeight = Math.round(baseSize / aspectRatio);
-        } else {
-          targetHeight = baseSize;
-          targetWidth = Math.round(baseSize * aspectRatio);
-        }
-      }
-
-      // Calculate pixel dimensions
-      const numPixelsX = Math.floor(targetWidth / pixelSize);
-      const numPixelsY = Math.floor(targetHeight / pixelSize);
-      
-      // Adjust canvas size to match exact pixel grid
-      canvas.width = numPixelsX * pixelSize;
-      canvas.height = numPixelsY * pixelSize;
-      
-      // Set up crisp rendering
-      ctx.imageSmoothingEnabled = false;
+      // Set canvas size to match original image
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
       
       // Draw original image
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
       
-      // Get image data for color processing
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      // Get image data
+      const imageData = ctx.getImageData(0, 0, targetWidth, targetHeight);
       const data = imageData.data;
-
-      // Process colors if using a palette
-      const palette = CLASSIC_PALETTES.find(p => p.id === paletteId);
-      if (palette && palette.id !== 'original') {
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-          
-          const closestColor = findClosestColor([r, g, b], palette.colors);
-          const [cr, cg, cb] = hexToRgb(closestColor);
-          
-          data[i] = cr;
-          data[i + 1] = cg;
-          data[i + 2] = cb;
-        }
-        ctx.putImageData(imageData, 0, 0);
-      }
-
-      // Create pixelated effect
-      const tempCanvas = document.createElement('canvas');
-      const tempCtx = tempCanvas.getContext('2d');
-      if (!tempCtx) return;
       
-      tempCanvas.width = canvas.width;
-      tempCanvas.height = canvas.height;
-      tempCtx.drawImage(canvas, 0, 0);
+      // Get palette colors
+      const paletteColors = CLASSIC_PALETTES.find(p => p.id === paletteId)?.colors || [];
       
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      for (let y = 0; y < numPixelsY; y++) {
-        for (let x = 0; x < numPixelsX; x++) {
-          const sourceX = x * pixelSize;
-          const sourceY = y * pixelSize;
+      // Process pixels
+      for (let y = 0; y < targetHeight; y += pixelSize) {
+        for (let x = 0; x < targetWidth; x += pixelSize) {
+          // Sample the color from the center of each pixel block
+          const centerX = Math.min(x + Math.floor(pixelSize / 2), targetWidth - 1);
+          const centerY = Math.min(y + Math.floor(pixelSize / 2), targetHeight - 1);
+          const centerIndex = (centerY * targetWidth + centerX) * 4;
           
-          const pixelData = tempCtx.getImageData(sourceX, sourceY, 1, 1).data;
+          const r = data[centerIndex];
+          const g = data[centerIndex + 1];
+          const b = data[centerIndex + 2];
           
-          ctx.fillStyle = `rgba(${pixelData[0]},${pixelData[1]},${pixelData[2]},${pixelData[3] / 255})`;
-          ctx.fillRect(
-            x * pixelSize,
-            y * pixelSize,
-            pixelSize,
-            pixelSize
-          );
+          // Find the closest color in the palette if a palette is selected
+          let finalColor: string;
+          if (paletteColors.length > 0) {
+            finalColor = findClosestColor([r, g, b], paletteColors);
+            const [pr, pg, pb] = hexToRgb(finalColor);
+            
+            // Fill the pixel block with the palette color
+            for (let py = y; py < Math.min(y + pixelSize, targetHeight); py++) {
+              for (let px = x; px < Math.min(x + pixelSize, targetWidth); px++) {
+                const index = (py * targetWidth + px) * 4;
+                data[index] = pr;
+                data[index + 1] = pg;
+                data[index + 2] = pb;
+              }
+            }
+          } else {
+            // If no palette is selected, just fill with the sampled color
+            for (let py = y; py < Math.min(y + pixelSize, targetHeight); py++) {
+              for (let px = x; px < Math.min(x + pixelSize, targetWidth); px++) {
+                const index = (py * targetWidth + px) * 4;
+                data[index] = r;
+                data[index + 1] = g;
+                data[index + 2] = b;
+              }
+            }
+          }
         }
       }
+      
+      // Put the processed image data back
+      ctx.putImageData(imageData, 0, 0);
     };
-  }, [src, pixelSize, useSameResolution, paletteId]);
+  }, [src, pixelSize, paletteId]);
 
   return (
     <div style={{ width: '100%', paddingBottom: '100%', position: 'relative' }}>
