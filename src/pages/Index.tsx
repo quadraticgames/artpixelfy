@@ -110,7 +110,7 @@ const Index = () => {
           </div>
         )}
       </div>
-      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 pt-8">
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
         <p className="text-white text-sm opacity-50">Version 1.01</p>
       </div>
     </div>
