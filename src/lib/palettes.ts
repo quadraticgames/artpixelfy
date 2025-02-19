@@ -24,27 +24,24 @@ export const CLASSIC_PALETTES: Palette[] = [
     id: 'nes',
     name: 'NES',
     colors: [
-      // Grayscale row
-      '#000000', '#404040', '#808080', '#FFFFFF',
-      // Blues (more saturated)
-      '#0000FF', '#0040FF', '#0080FF', '#00A0FF', '#40C0FF', '#80C0FF',
-      // Purples (more vivid)
-      '#4000FF', '#8000FF', '#A040FF', '#C080FF',
-      // Magentas/Pinks (brighter)
-      '#FF00A0', '#FF00FF', '#FF80FF', '#FFC0FF',
-      // Reds (more intense)
-      '#FF0000', '#FF2000', '#FF4000', '#FF6000', '#FF8080',
-      // Oranges/Browns (more saturated)
-      '#C04000', '#804000', '#FF8000', '#FFA000', '#FFB060', '#FFC080', '#FFD0A0', '#FFE0C0',
-      // Greens (more vibrant)
-      '#00FF00', '#00C000', '#008000', '#40FF00', '#60FF40', '#80FF80', '#C0FF40', '#80FF40',
-      '#40FFA0', '#C0FFC0', '#C0FFE0',
-      // Cyans (brighter)
-      '#00C0FF', '#00FFFF', '#80FFFF', '#C0FFFF',
-      // Remaining unique colors (more saturated)
-      '#606060', '#FFE040', '#E0FF40', '#FFC0FF'
+      '#7C7C7C', '#0000FC', '#0000BC', '#4428BC',
+      '#940084', '#A80020', '#A81000', '#881400',
+      '#503000', '#007800', '#006800', '#005800',
+      '#004058', '#000000', '#000000', '#000000',
+      '#BCBCBC', '#0078F8', '#0058F8', '#6844FC',
+      '#D800CC', '#E40058', '#F83800', '#E45C10',
+      '#AC7C00', '#00B800', '#00A800', '#00A844',
+      '#008888', '#000000', '#000000', '#000000',
+      '#F8F8F8', '#3CBCFC', '#6888FC', '#9878F8',
+      '#F878F8', '#F85898', '#F87858', '#FCA044',
+      '#F8B800', '#B8F818', '#58D854', '#58F898',
+      '#00E8D8', '#787878', '#000000', '#000000',
+      '#FCFCFC', '#A4E4FC', '#B8B8F8', '#D8B8F8',
+      '#F8B8F8', '#F8A4C0', '#F0D0B0', '#FCE0A8',
+      '#F8D878', '#D8F878', '#B8F8B8', '#B8F8D8',
+      '#00FCFC', '#F8D8F8', '#000000', '#000000'
     ],
-    description: 'Enhanced NES color palette with more vibrant and high-contrast colors'
+    description: 'Official Nintendo Entertainment System color palette'
   },
   {
     id: 'cga',
