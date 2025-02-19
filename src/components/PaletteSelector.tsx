@@ -46,7 +46,7 @@ export function PaletteSelector({
             ))}
           </SelectContent>
         </Select>
-        <div className="text-xs text-white/60 max-w-[200px]">
+        <div className="text-xs text-white/60 flex-1">
           {CLASSIC_PALETTES.find(p => p.id === selectedPalette)?.description}
         </div>
       </div>
