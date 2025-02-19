@@ -1,10 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CLASSIC_PALETTES } from "@/lib/palettes";
 
 interface PixelatedImageProps {
   src: string;
   pixelSize: number;
-  useSameResolution?: boolean;
   paletteId?: string;
 }
 
@@ -66,10 +65,10 @@ function findClosestColor(rgb: [number, number, number], paletteColors: string[]
 export function PixelatedImage({
   src,
   pixelSize,
-  useSameResolution = false,
   paletteId = 'original'
 }: PixelatedImageProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [aspectRatio, setAspectRatio] = useState(1);
 
   // Clear cache when component unmounts or when palette changes
   useEffect(() => {
@@ -89,43 +88,25 @@ export function PixelatedImage({
     img.crossOrigin = "anonymous";
     img.src = src;
     img.onload = () => {
-      // Calculate dimensions to maintain aspect ratio
-      const aspectRatio = img.width / img.height;
-      const baseSize = 512; // Base size for scaling
-      let targetWidth, targetHeight;
+      // Use original image dimensions
+      const targetWidth = img.width;
+      const targetHeight = img.height;
       
-      if (useSameResolution) {
-        targetWidth = img.width;
-        targetHeight = img.height;
-      } else {
-        if (aspectRatio >= 1) {
-          targetWidth = baseSize;
-          targetHeight = Math.round(baseSize / aspectRatio);
-        } else {
-          targetHeight = baseSize;
-          targetWidth = Math.round(baseSize * aspectRatio);
-        }
-      }
-
-      // Calculate pixel dimensions
-      const numPixelsX = Math.floor(targetWidth / pixelSize);
-      const numPixelsY = Math.floor(targetHeight / pixelSize);
+      // Update aspect ratio
+      setAspectRatio(targetHeight / targetWidth * 100);
       
-      // Adjust canvas size to match exact pixel grid
-      canvas.width = numPixelsX * pixelSize;
-      canvas.height = numPixelsY * pixelSize;
-      
-      // Set up crisp rendering
-      ctx.imageSmoothingEnabled = false;
+      // Set canvas size to match original image
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
       
       // Draw original image
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
       
       // Get image data for color processing
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const imageData = ctx.getImageData(0, 0, targetWidth, targetHeight);
       const data = imageData.data;
 
-      // Process colors if using a palette
+      // Get palette colors
       const palette = CLASSIC_PALETTES.find(p => p.id === paletteId);
       if (palette && palette.id !== 'original') {
         for (let i = 0; i < data.length; i += 4) {
@@ -148,11 +129,14 @@ export function PixelatedImage({
       const tempCtx = tempCanvas.getContext('2d');
       if (!tempCtx) return;
       
-      tempCanvas.width = canvas.width;
-      tempCanvas.height = canvas.height;
+      tempCanvas.width = targetWidth;
+      tempCanvas.height = targetHeight;
       tempCtx.drawImage(canvas, 0, 0);
       
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, targetWidth, targetHeight);
+      
+      const numPixelsX = Math.floor(targetWidth / pixelSize);
+      const numPixelsY = Math.floor(targetHeight / pixelSize);
       
       for (let y = 0; y < numPixelsY; y++) {
         for (let x = 0; x < numPixelsX; x++) {
@@ -171,10 +155,10 @@ export function PixelatedImage({
         }
       }
     };
-  }, [src, pixelSize, useSameResolution, paletteId]);
+  }, [src, pixelSize, paletteId]);
 
   return (
-    <div style={{ width: '100%', paddingBottom: '100%', position: 'relative' }}>
+    <div style={{ width: '100%', paddingBottom: `${aspectRatio}%`, position: 'relative' }}>
       <canvas
         ref={canvasRef}
         style={{
@@ -183,7 +167,6 @@ export function PixelatedImage({
           left: 0,
           width: '100%',
           height: '100%',
-          objectFit: 'contain',
           imageRendering: 'pixelated'
         }}
       />

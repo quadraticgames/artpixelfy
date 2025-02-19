@@ -10,7 +10,6 @@ import { PaletteSelector } from "@/components/PaletteSelector";
 const Index = () => {
   const [image, setImage] = useState<string | null>(null);
   const [pixelSize, setPixelSize] = useState([8]);
-  const [useSameResolution, setUseSameResolution] = useState(false);
   const [selectedPalette, setSelectedPalette] = useState('original');
   const pixelatedRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -64,7 +63,6 @@ const Index = () => {
               <PixelatedImage 
                 src={image} 
                 pixelSize={pixelSize[0]} 
-                useSameResolution={useSameResolution}
                 paletteId={selectedPalette}
               />
             </div>
@@ -85,17 +83,6 @@ const Index = () => {
                 selectedPalette={selectedPalette}
                 onSelectPalette={setSelectedPalette}
               />
-              <div className="flex items-center space-x-1.5">
-                <input
-                  type="checkbox"
-                  id="resolutionCheckbox"
-                  checked={useSameResolution}
-                  onChange={(e) => setUseSameResolution(e.target.checked)}
-                />
-                <label htmlFor="resolutionCheckbox" className="text-sm text-white">
-                  Use same resolution as source image
-                </label>
-              </div>
               <div className="flex gap-3 justify-center">
                 <input
                   type="file"
