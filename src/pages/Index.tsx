@@ -39,7 +39,7 @@ const Index = () => {
   return (
     <div className="min-h-screen p-7 font-pixel relative"
       style={{
-        background: "linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)",
+        background: "linear-gradient(-45deg, #c85228, #b31b52, #0c75a3, #0a9677)",
         backgroundSize: "400% 400%",
         animation: "gradient 15s ease infinite"
       }}
