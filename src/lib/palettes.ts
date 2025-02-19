@@ -24,27 +24,24 @@ export const CLASSIC_PALETTES: Palette[] = [
     id: 'nes',
     name: 'NES',
     colors: [
-      // Grayscale row
-      '#7C7C7C', '#BCBCBC', '#F8F8F8', '#FCFCFC',
+      // Grays
+      '#7C7C7C', '#BCBCBC', '#F8F8F8',
       // Blues
-      '#0000FC', '#0000BC', '#0078F8', '#0058F8', '#3CBCFC', '#6888FC',
-      // Purples
-      '#4428BC', '#6844FC', '#9878F8', '#D8B8F8',
-      // Magentas/Pinks
-      '#940084', '#D800CC', '#F878F8', '#F8B8F8',
+      '#0000FC', '#0078F8', '#3CBCFC',
+      // Purples and Magentas
+      '#4428BC', '#940084', '#D800CC', '#F878F8',
       // Reds
-      '#A80020', '#A81000', '#E40058', '#F83800', '#F85898',
-      // Oranges/Browns
-      '#881400', '#503000', '#E45C10', '#AC7C00', '#F87858', '#FCA044', '#F0D0B0', '#FCE0A8',
+      '#A81000', '#E40058', '#F83800',
+      // Oranges and Browns
+      '#E45C10', '#AC7C00', '#F87858', '#FCA044',
+      // Yellows
+      '#F8B800', '#F8D878',
       // Greens
-      '#007800', '#006800', '#005800', '#00B800', '#00A800', '#00A844', '#B8F818', '#58D854',
-      '#58F898', '#B8F8B8', '#B8F8D8',
+      '#007800', '#00A800', '#58D854', '#B8F818',
       // Cyans
-      '#004058', '#008888', '#00E8D8', '#00FCFC',
-      // Remaining unique colors
-      '#787878', '#F8D878', '#D8F878', '#F8D8F8'
+      '#00E8D8', '#00FCFC'
     ],
-    description: 'Nintendo Entertainment System\'s optimized color palette (duplicates removed, organized by color groups)'
+    description: 'Nintendo Entertainment System\'s color palette (optimized for modern displays)'
   },
   {
     id: 'cga',
