@@ -48,7 +48,7 @@ const Index = () => {
         <div className="text-center space-y-1.5">
           <h1 className="text-4xl font-medium tracking-tight text-white">
             <a href="/" className="hover:opacity-80 transition-opacity cursor-pointer">
-              Create Pixel Art
+              ArtPixelFy
             </a>
           </h1>
           <p className="text-white">Upload an image and convert it into beautiful pixel art</p>
