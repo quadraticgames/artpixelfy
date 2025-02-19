@@ -130,6 +130,40 @@ export function PixelatedImage({
         ctx.putImageData(imageData, 0, 0);
       }
 
+      // Put the processed image data back
+      ctx.putImageData(imageData, 0, 0);
+
+      // Create pixelated effect
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
+      if (!tempCtx) return;
+      
+      tempCanvas.width = targetWidth;
+      tempCanvas.height = targetHeight;
+      tempCtx.drawImage(canvas, 0, 0);
+      
+      ctx.clearRect(0, 0, targetWidth, targetHeight);
+      
+      const numPixelsX = Math.floor(targetWidth / pixelSize);
+      const numPixelsY = Math.floor(targetHeight / pixelSize);
+      
+      for (let y = 0; y < numPixelsY; y++) {
+        for (let x = 0; x < numPixelsX; x++) {
+          const sourceX = x * pixelSize;
+          const sourceY = y * pixelSize;
+          
+          const pixelData = tempCtx.getImageData(sourceX, sourceY, 1, 1).data;
+          
+          ctx.fillStyle = `rgba(${pixelData[0]},${pixelData[1]},${pixelData[2]},${pixelData[3] / 255})`;
+          ctx.fillRect(
+            x * pixelSize,
+            y * pixelSize,
+            pixelSize,
+            pixelSize
+          );
+        }
+      }
+
       // Notify parent that canvas is ready
       if (onCanvasRender) {
         onCanvasRender(canvas);
