@@ -5,6 +5,7 @@ interface PixelatedImageProps {
   src: string;
   pixelSize: number;
   paletteId?: string;
+  onCanvasRender?: (canvas: HTMLCanvasElement) => void;
 }
 
 // Cache for color matching to avoid recalculating the same colors
@@ -65,7 +66,8 @@ function findClosestColor(rgb: [number, number, number], paletteColors: string[]
 export function PixelatedImage({
   src,
   pixelSize,
-  paletteId = 'original'
+  paletteId = 'original',
+  onCanvasRender
 }: PixelatedImageProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [aspectRatio, setAspectRatio] = useState(1);
@@ -124,6 +126,11 @@ export function PixelatedImage({
         ctx.putImageData(imageData, 0, 0);
       }
 
+      // Notify parent that canvas is ready
+      if (onCanvasRender) {
+        onCanvasRender(canvas);
+      }
+
       // Create pixelated effect
       const tempCanvas = document.createElement('canvas');
       const tempCtx = tempCanvas.getContext('2d');
@@ -155,7 +162,7 @@ export function PixelatedImage({
         }
       }
     };
-  }, [src, pixelSize, paletteId]);
+  }, [src, pixelSize, paletteId, onCanvasRender]);
 
   return (
     <div style={{ width: '100%', paddingBottom: `${aspectRatio}%`, position: 'relative' }}>

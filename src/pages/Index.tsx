@@ -2,7 +2,6 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
-import * as htmlToImage from "html-to-image";
 import { ImageUploader } from "@/components/ImageUploader";
 import { PixelatedImage } from "@/components/PixelatedImage";
 import { PaletteSelector } from "@/components/PaletteSelector";
@@ -11,7 +10,7 @@ const Index = () => {
   const [image, setImage] = useState<string | null>(null);
   const [pixelSize, setPixelSize] = useState([8]);
   const [selectedPalette, setSelectedPalette] = useState('original');
-  const pixelatedRef = useRef<HTMLDivElement>(null);
+  const [processedCanvas, setProcessedCanvas] = useState<HTMLCanvasElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (file: File) => {
@@ -24,9 +23,9 @@ const Index = () => {
   };
 
   const handleDownload = async () => {
-    if (!pixelatedRef.current) return;
+    if (!processedCanvas) return;
     try {
-      const dataUrl = await htmlToImage.toPng(pixelatedRef.current);
+      const dataUrl = processedCanvas.toDataURL('image/png');
       const link = document.createElement("a");
       link.download = "pixel-art.png";
       link.href = dataUrl;
@@ -59,11 +58,12 @@ const Index = () => {
           <ImageUploader onUpload={handleImageUpload} />
         ) : (
           <div className="space-y-5">
-            <div ref={pixelatedRef} className="relative w-full max-w-xl mx-auto rounded-lg overflow-hidden">
+            <div className="relative w-full max-w-xl mx-auto rounded-lg overflow-hidden">
               <PixelatedImage 
                 src={image} 
                 pixelSize={pixelSize[0]} 
                 paletteId={selectedPalette}
+                onCanvasRender={setProcessedCanvas}
               />
             </div>
             
