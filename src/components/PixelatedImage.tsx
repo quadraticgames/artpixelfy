@@ -189,7 +189,7 @@ export function PixelatedImage({
   }, [src, debouncedPixelSize, paletteId, paletteRgb, onCanvasRender]);
 
   return (
-    <div className="relative h-[300px] flex items-center justify-center">
+    <div className="relative w-full">
       {isProcessing && (
         <div className="absolute inset-0 flex items-center justify-center bg-white/50">
           <LoadingSpinner />
@@ -198,9 +198,9 @@ export function PixelatedImage({
       <canvas
         ref={canvasRef}
         style={{
-          maxWidth: '100%',
-          maxHeight: '100%',
-          objectFit: 'contain'
+          width: '100%',
+          height: 'auto',
+          display: 'block'
         }}
       />
     </div>
