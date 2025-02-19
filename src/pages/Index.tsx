@@ -99,14 +99,14 @@ const Index = () => {
                   />
                   <Button
                     variant="purple"
-                    className="w-36"
+                    className="w-36 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:brightness-110 active:scale-95"
                     onClick={() => fileInputRef.current?.click()}
                   >
                     Upload New Image
                   </Button>
                   <Button
                     variant="purple"
-                    className="w-36"
+                    className="w-36 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:brightness-110 active:scale-95"
                     onClick={handleDownload}
                   >
                     Download
