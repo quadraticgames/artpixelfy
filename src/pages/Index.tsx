@@ -59,7 +59,7 @@ const Index = () => {
             <ImageUploader onUpload={handleImageUpload} />
           ) : (
             <div className="space-y-5">
-              <div className="relative w-full max-w-xl mx-auto rounded-lg overflow-hidden">
+              <div className="relative w-full max-w-xl mx-auto rounded-lg overflow-hidden shadow-[0_10px_20px_rgba(0,0,0,0.15)] border border-white/10">
                 <PixelatedImage 
                   src={image} 
                   pixelSize={pixelSize[0]} 
