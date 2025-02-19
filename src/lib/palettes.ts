@@ -90,5 +90,16 @@ export const CLASSIC_PALETTES: Palette[] = [
       '#CCCCCC', '#DDDDDD', '#EEEEEE', '#FFFFFF'
     ],
     description: 'The 16-shade grayscale palette was a staple of early MS-DOS text mode displays in the 1980s. Before color monitors became widespread, this palette allowed for subtle shading and pseudo-graphics in applications like WordPerfect and early PC games. The human eye can distinguish these 16 distinct levels of gray, making it perfect for ASCII art and text-based interfaces.'
+  },
+  {
+    id: 'mattel',
+    name: 'Mattel Aquarius',
+    colors: [
+      '#000000', '#C4001B', '#07BF00', '#C9B908',
+      '#0000C4', '#C400C4', '#00BFC4', '#C4C4C4',
+      '#606060', '#FF0024', '#00FF00', '#FFFF00',
+      '#0000FF', '#FF00FF', '#00FFFF', '#FFFFFF'
+    ],
+    description: 'Released in 1983, the Mattel Aquarius was Mattel\'s venture into home computing. Though short-lived (only 4 months on the market), it featured a vibrant 16-color palette powered by the TMS9929A video chip. The computer\'s unique "chiclet" keyboard and built-in BASIC made it memorable, even if Mattel\'s CEO called it "a dump" of a computer.'
   }
 ];
