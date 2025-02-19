@@ -73,5 +73,16 @@ export const CLASSIC_PALETTES: Palette[] = [
       '#00CD00', '#00CDCD', '#CDCD00', '#CDCDCD'
     ],
     description: 'ZX Spectrum\'s 8-color palette'
+  },
+  {
+    id: 'msdos',
+    name: 'MS-DOS',
+    colors: [
+      '#000000', '#111111', '#222222', '#333333',
+      '#444444', '#555555', '#666666', '#777777',
+      '#888888', '#999999', '#AAAAAA', '#BBBBBB',
+      '#CCCCCC', '#DDDDDD', '#EEEEEE', '#FFFFFF'
+    ],
+    description: 'Classic MS-DOS 16-shade grayscale palette'
   }
 ];

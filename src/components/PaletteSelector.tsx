@@ -32,18 +32,13 @@ export function PaletteSelector({
                   <span>{palette.name}</span>
                   {palette.id !== 'original' && (
                     <div className="flex gap-0.5">
-                      {palette.colors.slice(0, 4).map((color, index) => (
+                      {palette.colors.slice(0, 5).map((color, index) => (
                         <div
                           key={index}
                           className="w-3 h-3 rounded-sm"
                           style={{ backgroundColor: color }}
                         />
                       ))}
-                      {palette.colors.length > 4 && (
-                        <div className="w-3 h-3 rounded-sm flex items-center justify-center text-[8px] bg-white/10">
-                          +{palette.colors.length - 4}
-                        </div>
-                      )}
                     </div>
                   )}
                 </div>
