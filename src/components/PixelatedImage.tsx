@@ -93,7 +93,8 @@ export function PixelatedImage({
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.src = src;
-    img.onload = () => {
+
+    const processImage = () => {
       // Use original image dimensions
       const targetWidth = img.width;
       const targetHeight = img.height;
@@ -129,9 +130,6 @@ export function PixelatedImage({
         }
         ctx.putImageData(imageData, 0, 0);
       }
-
-      // Put the processed image data back
-      ctx.putImageData(imageData, 0, 0);
 
       // Create pixelated effect
       const tempCanvas = document.createElement('canvas');
@@ -169,8 +167,13 @@ export function PixelatedImage({
         onCanvasRender(canvas);
       }
 
-      setIsProcessing(false);
+      // Only set processing to false after everything is done
+      setTimeout(() => {
+        setIsProcessing(false);
+      }, 500);
     };
+
+    img.onload = processImage;
   }, [src, pixelSize, paletteId, onCanvasRender]);
 
   return (
