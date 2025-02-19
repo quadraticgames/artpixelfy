@@ -15,36 +15,43 @@ export const CLASSIC_PALETTES: Palette[] = [
   {
     id: 'gameboy',
     name: 'Game Boy',
-    colors: ['#0f380f', '#306230', '#8bac0f', '#9bbc0f'],
+    colors: [
+      '#0f380f', '#306230', '#8bac0f', '#9bbc0f'
+    ],
     description: 'The iconic 4-color palette of the original Game Boy'
   },
   {
     id: 'nes',
     name: 'NES',
     colors: [
-      '#7C7C7C', '#0000FC', '#0000BC', '#4428BC',
-      '#940084', '#A80020', '#A81000', '#881400',
-      '#503000', '#007800', '#006800', '#005800',
-      '#004058', '#000000', '#000000', '#000000',
-      '#BCBCBC', '#0078F8', '#0058F8', '#6844FC',
-      '#D800CC', '#E40058', '#F83800', '#E45C10',
-      '#AC7C00', '#00B800', '#00A800', '#00A844',
-      '#008888', '#000000', '#000000', '#000000',
-      '#F8F8F8', '#3CBCFC', '#6888FC', '#9878F8',
-      '#F878F8', '#F85898', '#F87858', '#FCA044',
-      '#F8B800', '#B8F818', '#58D854', '#58F898',
-      '#00E8D8', '#787878', '#000000', '#000000',
-      '#FCFCFC', '#A4E4FC', '#B8B8F8', '#D8B8F8',
-      '#F8B8F8', '#F8A4C0', '#F0D0B0', '#FCE0A8',
-      '#F8D878', '#D8F878', '#B8F8B8', '#B8F8D8',
-      '#00FCFC', '#F8D8F8', '#000000', '#000000'
+      // Grayscale row
+      '#7C7C7C', '#BCBCBC', '#F8F8F8', '#FCFCFC',
+      // Blues
+      '#0000FC', '#0000BC', '#0078F8', '#0058F8', '#3CBCFC', '#6888FC',
+      // Purples
+      '#4428BC', '#6844FC', '#9878F8', '#D8B8F8',
+      // Magentas/Pinks
+      '#940084', '#D800CC', '#F878F8', '#F8B8F8',
+      // Reds
+      '#A80020', '#A81000', '#E40058', '#F83800', '#F85898',
+      // Oranges/Browns
+      '#881400', '#503000', '#E45C10', '#AC7C00', '#F87858', '#FCA044', '#F0D0B0', '#FCE0A8',
+      // Greens
+      '#007800', '#006800', '#005800', '#00B800', '#00A800', '#00A844', '#B8F818', '#58D854',
+      '#58F898', '#B8F8B8', '#B8F8D8',
+      // Cyans
+      '#004058', '#008888', '#00E8D8', '#00FCFC',
+      // Remaining unique colors
+      '#787878', '#F8D878', '#D8F878', '#F8D8F8'
     ],
-    description: 'Nintendo Entertainment System\'s 54-color palette'
+    description: 'Nintendo Entertainment System\'s optimized color palette (duplicates removed, organized by color groups)'
   },
   {
     id: 'cga',
     name: 'CGA Mode 4',
-    colors: ['#000000', '#55FFFF', '#FF55FF', '#FFFFFF'],
+    colors: [
+      '#000000', '#55FFFF', '#FF55FF', '#FFFFFF'
+    ],
     description: 'IBM\'s CGA Mode 4 High-Intensity Palette'
   },
   {

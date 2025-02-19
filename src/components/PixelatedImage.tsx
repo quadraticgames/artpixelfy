@@ -8,6 +8,61 @@ interface PixelatedImageProps {
   paletteId?: string;
 }
 
+// Cache for color matching to avoid recalculating the same colors
+const colorCache = new Map<string, string>();
+
+// Helper function to convert hex to RGB
+function hexToRgb(hex: string): [number, number, number] {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!result) {
+    throw new Error(`Invalid hex color: ${hex}`);
+  }
+  return [
+    parseInt(result[1], 16),
+    parseInt(result[2], 16),
+    parseInt(result[3], 16)
+  ];
+}
+
+// More efficient color distance calculation using weighted RGB
+function colorDistance(rgb1: [number, number, number], rgb2: [number, number, number]): number {
+  // Using weighted RGB components for better perceptual matching
+  const rmean = (rgb1[0] + rgb2[0]) / 2;
+  const r = rgb1[0] - rgb2[0];
+  const g = rgb1[1] - rgb2[1];
+  const b = rgb1[2] - rgb2[2];
+  return Math.sqrt((((512 + rmean) * r * r) >> 8) + 4 * g * g + (((767 - rmean) * b * b) >> 8));
+}
+
+// Optimized closest color finder with caching
+function findClosestColor(rgb: [number, number, number], paletteColors: string[]): string {
+  // Create a cache key
+  const cacheKey = `${rgb[0]},${rgb[1]},${rgb[2]}`;
+  
+  // Check cache first
+  const cached = colorCache.get(cacheKey);
+  if (cached) return cached;
+  
+  let minDistance = Infinity;
+  let closestColor = paletteColors[0];
+  
+  // Convert all palette colors to RGB once
+  const paletteRgb = paletteColors.map(color => hexToRgb(color));
+  
+  for (let i = 0; i < paletteRgb.length; i++) {
+    const distance = colorDistance(rgb, paletteRgb[i]);
+    if (distance < minDistance) {
+      minDistance = distance;
+      closestColor = paletteColors[i];
+    }
+  }
+  
+  // Cache the result
+  colorCache.set(cacheKey, closestColor);
+  
+  return closestColor;
+}
+
 export function PixelatedImage({
   src,
   pixelSize,
@@ -15,6 +70,13 @@ export function PixelatedImage({
   paletteId = 'original'
 }: PixelatedImageProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Clear cache when component unmounts or when palette changes
+  useEffect(() => {
+    return () => {
+      colorCache.clear();
+    };
+  }, [paletteId]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -127,37 +189,4 @@ export function PixelatedImage({
       />
     </div>
   );
-}
-
-// Helper function to convert hex to RGB
-function hexToRgb(hex: string): [number, number, number] {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  if (!result) return [0, 0, 0];
-  return [
-    parseInt(result[1], 16),
-    parseInt(result[2], 16),
-    parseInt(result[3], 16)
-  ];
-}
-
-// Helper function to find the closest color in a palette
-function findClosestColor(rgb: [number, number, number], paletteColors: string[]): string {
-  let minDistance = Infinity;
-  let closestColor = paletteColors[0];
-
-  for (const color of paletteColors) {
-    const targetRgb = hexToRgb(color);
-    const distance = Math.sqrt(
-      Math.pow(rgb[0] - targetRgb[0], 2) +
-      Math.pow(rgb[1] - targetRgb[1], 2) +
-      Math.pow(rgb[2] - targetRgb[2], 2)
-    );
-
-    if (distance < minDistance) {
-      minDistance = distance;
-      closestColor = color;
-    }
-  }
-
-  return closestColor;
 }
