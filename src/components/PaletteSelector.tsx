@@ -22,10 +22,10 @@ export function PaletteSelector({
       <label className="text-sm text-white">Color Palette</label>
       <div className="flex gap-3 items-start">
         <Select value={selectedPalette} onValueChange={onSelectPalette}>
-          <SelectTrigger className="w-[200px] bg-white/10 border-0 text-white">
+          <SelectTrigger className="w-[200px] bg-white/10 border-0 text-white font-pixel">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="font-pixel">
             {CLASSIC_PALETTES.map((palette) => (
               <SelectItem key={palette.id} value={palette.id}>
                 <div className="flex items-center gap-2">
