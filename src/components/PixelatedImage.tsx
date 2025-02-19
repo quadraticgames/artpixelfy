@@ -27,23 +27,49 @@ export function PixelatedImage({
     img.crossOrigin = "anonymous";
     img.src = src;
     img.onload = () => {
-      // Calculate dimensions
+      // Calculate dimensions to maintain aspect ratio
       const aspectRatio = img.width / img.height;
-      const targetWidth = useSameResolution ? img.width : 512;
-      const targetHeight = useSameResolution ? img.height : Math.round(512 / aspectRatio);
+      const baseSize = 512; // Base size for scaling
+      let targetWidth, targetHeight;
       
-      canvas.width = targetWidth;
-      canvas.height = targetHeight;
+      if (useSameResolution) {
+        targetWidth = img.width;
+        targetHeight = img.height;
+      } else {
+        if (aspectRatio >= 1) {
+          targetWidth = baseSize;
+          targetHeight = Math.round(baseSize / aspectRatio);
+        } else {
+          targetHeight = baseSize;
+          targetWidth = Math.round(baseSize * aspectRatio);
+        }
+      }
 
-      // Draw original image
+      // Calculate pixel dimensions
+      const numPixelsX = Math.floor(targetWidth / pixelSize);
+      const numPixelsY = Math.floor(targetHeight / pixelSize);
+      
+      // Adjust canvas size to match exact pixel grid
+      canvas.width = numPixelsX * pixelSize;
+      canvas.height = numPixelsY * pixelSize;
+      
+      // Set up crisp rendering
       ctx.imageSmoothingEnabled = false;
-      ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-
-      // Get image data
-      const imageData = ctx.getImageData(0, 0, targetWidth, targetHeight);
+      
+      // Create temporary canvas for initial image
+      const tempCanvas = document.createElement('canvas');
+      const tempCtx = tempCanvas.getContext('2d');
+      if (!tempCtx) return;
+      
+      tempCanvas.width = targetWidth;
+      tempCanvas.height = targetHeight;
+      tempCtx.drawImage(img, 0, 0, targetWidth, targetHeight);
+      
+      // Get image data for color processing
+      const imageData = tempCtx.getImageData(0, 0, targetWidth, targetHeight);
       const data = imageData.data;
 
-      // If using a palette other than original, quantize colors
+      // Process colors if using a palette
       const palette = CLASSIC_PALETTES.find(p => p.id === paletteId);
       if (palette && palette.id !== 'original') {
         for (let i = 0; i < data.length; i += 4) {
@@ -51,7 +77,6 @@ export function PixelatedImage({
           const g = data[i + 1];
           const b = data[i + 2];
           
-          // Find the closest color in the palette
           const closestColor = findClosestColor([r, g, b], palette.colors);
           const [cr, cg, cb] = hexToRgb(closestColor);
           
@@ -59,37 +84,26 @@ export function PixelatedImage({
           data[i + 1] = cg;
           data[i + 2] = cb;
         }
+        tempCtx.putImageData(imageData, 0, 0);
       }
 
-      // Clear canvas
-      ctx.clearRect(0, 0, targetWidth, targetHeight);
-
       // Create pixelated effect
-      const pixelWidth = Math.floor(targetWidth / pixelSize);
-      const pixelHeight = Math.floor(targetHeight / pixelSize);
-      
-      // Calculate actual pixel size to ensure uniform squares
-      const actualPixelWidth = targetWidth / pixelWidth;
-      const actualPixelHeight = targetHeight / pixelHeight;
-      
-      for (let y = 0; y < pixelHeight; y++) {
-        for (let x = 0; x < pixelWidth; x++) {
-          // Sample from the center of each pixel
-          const sourceX = Math.floor((x + 0.5) * actualPixelWidth);
-          const sourceY = Math.floor((y + 0.5) * actualPixelHeight);
-          const sourceIndex = (sourceY * targetWidth + sourceX) * 4;
+      for (let y = 0; y < numPixelsY; y++) {
+        for (let x = 0; x < numPixelsX; x++) {
+          // Sample from the center of each region
+          const sourceX = Math.floor((x + 0.5) * (targetWidth / numPixelsX));
+          const sourceY = Math.floor((y + 0.5) * (targetHeight / numPixelsY));
           
-          const r = data[sourceIndex];
-          const g = data[sourceIndex + 1];
-          const b = data[sourceIndex + 2];
-          const a = data[sourceIndex + 3];
+          // Get color data from the temp canvas
+          const pixelData = tempCtx.getImageData(sourceX, sourceY, 1, 1).data;
           
-          ctx.fillStyle = `rgba(${r},${g},${b},${a / 255})`;
+          // Draw the pixel
+          ctx.fillStyle = `rgba(${pixelData[0]},${pixelData[1]},${pixelData[2]},${pixelData[3] / 255})`;
           ctx.fillRect(
-            x * actualPixelWidth,
-            y * actualPixelHeight,
-            actualPixelWidth,
-            actualPixelHeight
+            x * pixelSize,
+            y * pixelSize,
+            pixelSize,
+            pixelSize
           );
         }
       }
@@ -99,7 +113,12 @@ export function PixelatedImage({
   return (
     <canvas
       ref={canvasRef}
-      className="w-full h-full"
+      style={{
+        imageRendering: 'pixelated',
+        width: '100%',
+        height: '100%',
+        display: 'block'
+      }}
     />
   );
 }
