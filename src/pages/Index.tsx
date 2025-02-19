@@ -125,7 +125,7 @@ const Index = () => {
               rel="noopener noreferrer" 
               className="text-white text-sm opacity-50 hover:opacity-80 transition-opacity underline"
             >
-              Source Code
+              Get the source code on GitHub!
             </a>
             <a href="https://quadraticgames.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
               <img src="/images/quadratic-logo.png" alt="Quadratic Games Logo" className="h-8" />
