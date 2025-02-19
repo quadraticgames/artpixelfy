@@ -25,26 +25,26 @@ export const CLASSIC_PALETTES: Palette[] = [
     name: 'NES',
     colors: [
       // Grayscale row
-      '#7C7C7C', '#BCBCBC', '#F8F8F8', '#FCFCFC',
-      // Blues
-      '#0000FC', '#0000BC', '#0078F8', '#0058F8', '#3CBCFC', '#6888FC',
-      // Purples
-      '#4428BC', '#6844FC', '#9878F8', '#D8B8F8',
-      // Magentas/Pinks
-      '#940084', '#D800CC', '#F878F8', '#F8B8F8',
-      // Reds
-      '#A80020', '#A81000', '#E40058', '#F83800', '#F85898',
-      // Oranges/Browns
-      '#881400', '#503000', '#E45C10', '#AC7C00', '#F87858', '#FCA044', '#F0D0B0', '#FCE0A8',
-      // Greens
-      '#007800', '#006800', '#005800', '#00B800', '#00A800', '#00A844', '#B8F818', '#58D854',
-      '#58F898', '#B8F8B8', '#B8F8D8',
-      // Cyans
-      '#004058', '#008888', '#00E8D8', '#00FCFC',
-      // Remaining unique colors
-      '#787878', '#F8D878', '#D8F878', '#F8D8F8'
+      '#000000', '#404040', '#808080', '#FFFFFF',
+      // Blues (more saturated)
+      '#0000FF', '#0040FF', '#0080FF', '#00A0FF', '#40C0FF', '#80C0FF',
+      // Purples (more vivid)
+      '#4000FF', '#8000FF', '#A040FF', '#C080FF',
+      // Magentas/Pinks (brighter)
+      '#FF00A0', '#FF00FF', '#FF80FF', '#FFC0FF',
+      // Reds (more intense)
+      '#FF0000', '#FF2000', '#FF4000', '#FF6000', '#FF8080',
+      // Oranges/Browns (more saturated)
+      '#C04000', '#804000', '#FF8000', '#FFA000', '#FFB060', '#FFC080', '#FFD0A0', '#FFE0C0',
+      // Greens (more vibrant)
+      '#00FF00', '#00C000', '#008000', '#40FF00', '#60FF40', '#80FF80', '#C0FF40', '#80FF40',
+      '#40FFA0', '#C0FFC0', '#C0FFE0',
+      // Cyans (brighter)
+      '#00C0FF', '#00FFFF', '#80FFFF', '#C0FFFF',
+      // Remaining unique colors (more saturated)
+      '#606060', '#FFE040', '#E0FF40', '#FFC0FF'
     ],
-    description: 'Nintendo Entertainment System\'s optimized color palette (duplicates removed, organized by color groups)'
+    description: 'Enhanced NES color palette with more vibrant and high-contrast colors'
   },
   {
     id: 'cga',
