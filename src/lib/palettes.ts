@@ -10,7 +10,7 @@ export const CLASSIC_PALETTES: Palette[] = [
     id: 'original',
     name: 'Original',
     colors: [],
-    description: 'Original image colors'
+    description: 'Original image colors without any palette restrictions'
   },
   {
     id: 'gameboy',
@@ -18,7 +18,7 @@ export const CLASSIC_PALETTES: Palette[] = [
     colors: [
       '#0f380f', '#306230', '#8bac0f', '#9bbc0f'
     ],
-    description: 'The iconic 4-color palette of the original Game Boy'
+    description: 'Released in 1989, the Nintendo Game Boy\'s iconic green-tinted LCD screen could display 4 shades. This limitation, combined with the "dot matrix with stereo sound" display, created a unique aesthetic that defined portable gaming. The olive-green tones were chosen for optimal visibility and battery life, leading to the success of games like Tetris and Pokémon.'
   },
   {
     id: 'nes',
@@ -39,7 +39,7 @@ export const CLASSIC_PALETTES: Palette[] = [
       '#F0D0B0', '#FCE0A8', '#F8D878', '#D8F878',
       '#B8F8B8', '#B8F8D8', '#00FCFC', '#F8D8F8'
     ],
-    description: 'Nintendo Entertainment System\'s optimized color palette'
+    description: 'Released in 1983, the Nintendo Entertainment System (NES) featured a custom Picture Processing Unit (PPU) capable of displaying 54 colors. Each sprite could only use 3 colors plus transparency, leading to the iconic look of games like Super Mario Bros. and The Legend of Zelda. The palette was specifically designed to look good on CRT televisions of the era.'
   },
   {
     id: 'intellivision',
@@ -50,15 +50,15 @@ export const CLASSIC_PALETTES: Palette[] = [
       '#FF8B00', '#00FFA4', '#FFFA00', '#00FF8A',
       '#FF0000', '#00FFFF', '#808080', '#FFFFFF'
     ],
-    description: 'Mattel Intellivision\'s 16-color palette'
+    description: 'The Mattel Intellivision, launched in 1979, was the first 16-bit gaming console. Its Standard Television Interface Chip (STIC) could display 16 vibrant colors, which was groundbreaking for its time. The console\'s advanced color capabilities helped create memorable games like Astrosmash and Advanced Dungeons & Dragons, setting new standards for home gaming graphics.'
   },
   {
     id: 'cga',
-    name: 'CGA Mode 4',
+    name: 'CGA',
     colors: [
       '#000000', '#55FFFF', '#FF55FF', '#FFFFFF'
     ],
-    description: 'IBM\'s CGA Mode 4 High-Intensity Palette'
+    description: 'IBM\'s Color Graphics Adapter (CGA), introduced in 1981, was the first color graphics card for IBM PCs. Mode 4, shown here, became iconic for its high-intensity cyan/magenta palette. Despite being limited to just 4 colors, creative developers made striking games like King\'s Quest and Commander Keen. The unusual color choices were influenced by the need to be visible on both RGB monitors and NTSC televisions.'
   },
   {
     id: 'commodore64',
@@ -69,7 +69,7 @@ export const CLASSIC_PALETTES: Palette[] = [
       '#DD8855', '#664400', '#FF7777', '#333333',
       '#777777', '#AAFF66', '#0088FF', '#BBBBBB'
     ],
-    description: 'The Commodore 64\'s distinctive 16-color palette'
+    description: 'The Commodore 64, released in 1982, featured the VIC-II graphics chip with 16 colors. Each 8x8 pixel character could only use one foreground and one background color, but clever programmers used techniques like dithering to create the illusion of more colors. The C64 became the best-selling computer model of all time, with hits like Impossible Mission showcasing its capabilities.'
   },
   {
     id: 'zxspectrum',
@@ -78,7 +78,7 @@ export const CLASSIC_PALETTES: Palette[] = [
       '#000000', '#0000CD', '#CD0000', '#CD00CD',
       '#00CD00', '#00CDCD', '#CDCD00', '#CDCDCD'
     ],
-    description: 'ZX Spectrum\'s 8-color palette'
+    description: 'Sir Clive Sinclair\'s ZX Spectrum (1982) brought color computing to British homes with its distinctive 8-color palette. Each 8x8 pixel block could only have one foreground and background color, leading to the famous "color clash" effect. Despite this limitation, the machine spawned thousands of creative games and birthed the UK\'s gaming industry.'
   },
   {
     id: 'msdos',
@@ -89,6 +89,6 @@ export const CLASSIC_PALETTES: Palette[] = [
       '#888888', '#999999', '#AAAAAA', '#BBBBBB',
       '#CCCCCC', '#DDDDDD', '#EEEEEE', '#FFFFFF'
     ],
-    description: 'Classic MS-DOS 16-shade grayscale palette'
+    description: 'The 16-shade grayscale palette was a staple of early MS-DOS text mode displays in the 1980s. Before color monitors became widespread, this palette allowed for subtle shading and pseudo-graphics in applications like WordPerfect and early PC games. The human eye can distinguish these 16 distinct levels of gray, making it perfect for ASCII art and text-based interfaces.'
   }
 ];
