@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { CLASSIC_PALETTES } from "@/lib/palettes";
 import { LoadingSpinner } from "./LoadingSpinner";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface PixelatedImageProps {
   src: string;
@@ -9,8 +10,8 @@ interface PixelatedImageProps {
   onCanvasRender?: (canvas: HTMLCanvasElement) => void;
 }
 
-// Cache for color matching to avoid recalculating the same colors
-const colorCache = new Map<string, string>();
+// Cache for processed images
+const processedImageCache = new Map<string, ImageData>();
 
 // Helper function to convert hex to RGB
 function hexToRgb(hex: string): [number, number, number] {
@@ -25,9 +26,8 @@ function hexToRgb(hex: string): [number, number, number] {
   ];
 }
 
-// More efficient color distance calculation using weighted RGB
+// Optimized color distance calculation
 function colorDistance(rgb1: [number, number, number], rgb2: [number, number, number]): number {
-  // Using weighted RGB components for better perceptual matching
   const rmean = (rgb1[0] + rgb2[0]) / 2;
   const r = rgb1[0] - rgb2[0];
   const g = rgb1[1] - rgb2[1];
@@ -35,33 +35,46 @@ function colorDistance(rgb1: [number, number, number], rgb2: [number, number, nu
   return Math.sqrt((((512 + rmean) * r * r) >> 8) + 4 * g * g + (((767 - rmean) * b * b) >> 8));
 }
 
-// Optimized closest color finder with caching
-function findClosestColor(rgb: [number, number, number], paletteColors: string[]): string {
-  // Create a cache key
-  const cacheKey = `${rgb[0]},${rgb[1]},${rgb[2]}`;
-  
-  // Check cache first
-  const cached = colorCache.get(cacheKey);
-  if (cached) return cached;
-  
-  let minDistance = Infinity;
-  let closestColor = paletteColors[0];
-  
-  // Convert all palette colors to RGB once
-  const paletteRgb = paletteColors.map(color => hexToRgb(color));
-  
-  for (let i = 0; i < paletteRgb.length; i++) {
-    const distance = colorDistance(rgb, paletteRgb[i]);
-    if (distance < minDistance) {
-      minDistance = distance;
-      closestColor = paletteColors[i];
+// Memoized palette RGB values
+function usePaletteRgb(paletteId: string) {
+  return useMemo(() => {
+    const palette = CLASSIC_PALETTES.find(p => p.id === paletteId);
+    if (!palette || palette.id === 'original') return null;
+    return palette.colors.map(color => hexToRgb(color));
+  }, [paletteId]);
+}
+
+// Efficient block processing function
+function processImageBlock(
+  sourceData: ImageData,
+  x: number,
+  y: number,
+  blockSize: number,
+  width: number
+): [number, number, number, number] {
+  let r = 0, g = 0, b = 0, a = 0;
+  const data = sourceData.data;
+  const maxX = Math.min(x + blockSize, width);
+  const maxY = Math.min(y + blockSize, sourceData.height);
+  let count = 0;
+
+  for (let py = y; py < maxY; py++) {
+    for (let px = x; px < maxX; px++) {
+      const i = (py * width + px) * 4;
+      r += data[i];
+      g += data[i + 1];
+      b += data[i + 2];
+      a += data[i + 3];
+      count++;
     }
   }
-  
-  // Cache the result
-  colorCache.set(cacheKey, closestColor);
-  
-  return closestColor;
+
+  return [
+    Math.round(r / count),
+    Math.round(g / count),
+    Math.round(b / count),
+    Math.round(a / count)
+  ];
 }
 
 export function PixelatedImage({
@@ -73,19 +86,14 @@ export function PixelatedImage({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [aspectRatio, setAspectRatio] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
-
-  // Clear cache when component unmounts or when palette changes
-  useEffect(() => {
-    return () => {
-      colorCache.clear();
-    };
-  }, [paletteId]);
+  const debouncedPixelSize = useDebounce(pixelSize, 150);
+  const paletteRgb = usePaletteRgb(paletteId);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
     setIsProcessing(true);
@@ -95,86 +103,90 @@ export function PixelatedImage({
     img.src = src;
 
     const processImage = () => {
-      // Use original image dimensions
       const targetWidth = img.width;
       const targetHeight = img.height;
       
-      // Update aspect ratio
       setAspectRatio(targetHeight / targetWidth * 100);
       
-      // Set canvas size to match original image
+      // Check cache first
+      const cacheKey = `${src}-${debouncedPixelSize}-${paletteId}`;
+      const cached = processedImageCache.get(cacheKey);
+      if (cached) {
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        ctx.putImageData(cached, 0, 0);
+        if (onCanvasRender) onCanvasRender(canvas);
+        setIsProcessing(false);
+        return;
+      }
+
+      // Set up canvases
       canvas.width = targetWidth;
       canvas.height = targetHeight;
       
-      // Draw original image
-      ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
-      
-      // Get image data for color processing
-      const imageData = ctx.getImageData(0, 0, targetWidth, targetHeight);
-      const data = imageData.data;
-
-      // Get palette colors
-      const palette = CLASSIC_PALETTES.find(p => p.id === paletteId);
-      if (palette && palette.id !== 'original') {
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-          
-          const closestColor = findClosestColor([r, g, b], palette.colors);
-          const [cr, cg, cb] = hexToRgb(closestColor);
-          
-          data[i] = cr;
-          data[i + 1] = cg;
-          data[i + 2] = cb;
-        }
-        ctx.putImageData(imageData, 0, 0);
-      }
-
-      // Create pixelated effect
       const tempCanvas = document.createElement('canvas');
-      const tempCtx = tempCanvas.getContext('2d');
+      const tempCtx = tempCanvas.getContext('2d', { alpha: true });
       if (!tempCtx) return;
       
       tempCanvas.width = targetWidth;
       tempCanvas.height = targetHeight;
-      tempCtx.drawImage(canvas, 0, 0);
       
-      ctx.clearRect(0, 0, targetWidth, targetHeight);
-      
-      const numPixelsX = Math.floor(targetWidth / pixelSize);
-      const numPixelsY = Math.floor(targetHeight / pixelSize);
-      
-      for (let y = 0; y < numPixelsY; y++) {
-        for (let x = 0; x < numPixelsX; x++) {
-          const sourceX = x * pixelSize;
-          const sourceY = y * pixelSize;
+      // Draw and process original image
+      tempCtx.drawImage(img, 0, 0, targetWidth, targetHeight);
+      const imageData = tempCtx.getImageData(0, 0, targetWidth, targetHeight);
+
+      // Apply color palette if needed
+      if (paletteRgb) {
+        const data = imageData.data;
+        for (let i = 0; i < data.length; i += 4) {
+          let minDistance = Infinity;
+          let closestColor = paletteRgb[0];
           
-          const pixelData = tempCtx.getImageData(sourceX, sourceY, 1, 1).data;
+          const rgb: [number, number, number] = [data[i], data[i + 1], data[i + 2]];
           
-          ctx.fillStyle = `rgba(${pixelData[0]},${pixelData[1]},${pixelData[2]},${pixelData[3] / 255})`;
-          ctx.fillRect(
-            x * pixelSize,
-            y * pixelSize,
-            pixelSize,
-            pixelSize
-          );
+          for (const paletteColor of paletteRgb) {
+            const distance = colorDistance(rgb, paletteColor);
+            if (distance < minDistance) {
+              minDistance = distance;
+              closestColor = paletteColor;
+            }
+          }
+          
+          data[i] = closestColor[0];
+          data[i + 1] = closestColor[1];
+          data[i + 2] = closestColor[2];
+        }
+        tempCtx.putImageData(imageData, 0, 0);
+      }
+
+      // Create pixelation effect
+      const blockSize = debouncedPixelSize;
+      for (let y = 0; y < targetHeight; y += blockSize) {
+        for (let x = 0; x < targetWidth; x += blockSize) {
+          const [r, g, b, a] = processImageBlock(imageData, x, y, blockSize, targetWidth);
+          ctx.fillStyle = `rgba(${r},${g},${b},${a / 255})`;
+          ctx.fillRect(x, y, blockSize, blockSize);
         }
       }
 
-      // Notify parent that canvas is ready
+      // Cache the result
+      processedImageCache.set(cacheKey, ctx.getImageData(0, 0, targetWidth, targetHeight));
+      
+      // Limit cache size
+      if (processedImageCache.size > 20) {
+        const firstKey = processedImageCache.keys().next().value;
+        processedImageCache.delete(firstKey);
+      }
+
       if (onCanvasRender) {
         onCanvasRender(canvas);
       }
 
-      // Only set processing to false after everything is done
-      setTimeout(() => {
-        setIsProcessing(false);
-      }, 500);
+      setIsProcessing(false);
     };
 
     img.onload = processImage;
-  }, [src, pixelSize, paletteId, onCanvasRender]);
+  }, [src, debouncedPixelSize, paletteId, paletteRgb, onCanvasRender]);
 
   return (
     <>
